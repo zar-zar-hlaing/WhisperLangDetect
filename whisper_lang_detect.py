@@ -9,6 +9,20 @@ import numpy as np
 SUPPORTED_AUDIO = ["aac", "aiff", "amr", "flac", "mp3", "m4a", "ogg", "wav", "wma"]
 SUPPORTED_VIDEO = ["avi", "mkv", "mov", "mpeg", "mp4", "webm", "wmv"]
 
+# -----------------------
+# Global model variable
+# -----------------------
+_model = None  # internal global variable
+
+
+def get_model(model_name="base"):
+    """Lazy-load and return the Whisper model."""
+    global _model
+    if _model is None:
+        print(f"Loading Whisper model '{model_name}' ...")
+        _model = whisper.load_model(model_name)
+    return _model
+
 
 def is_silent(content_path, threshold=-50):
     """Check if audio/video file is silent or has no speech."""
@@ -35,8 +49,10 @@ def is_silent(content_path, threshold=-50):
         return True
 
 
-def detect_language(content_path, model):
+def detect_language(content_path, model_name="base"):
     """Detect language in a single file and return JSON-compatible result."""
+    model = get_model(model_name)  # ensure model is loaded
+
     file_path, file_name = os.path.split(content_path)
     ext = file_name.split(".")[-1].lower()
 
@@ -85,7 +101,7 @@ def detect_language(content_path, model):
     return result
 
 
-def process_folder(folder_path, model):
+def process_folder(folder_path, model_name="base"):
     """Process all supported files in a folder."""
     results = []
     file_no = 1
@@ -93,7 +109,7 @@ def process_folder(folder_path, model):
         path = os.path.join(folder_path, fname)
         if not os.path.isfile(path):
             continue
-        res = detect_language(path, model)
+        res = detect_language(path, model_name)
         if res["status"] == "0":  # only keep valid results
             r = res["result"]
             r["fileno"] = file_no
@@ -111,14 +127,14 @@ def main():
                         help="Whisper model to use (default: base)")
     args = parser.parse_args()
 
-    # Load chosen Whisper model
-    model = whisper.load_model(args.model)
+    # Load model globally once
+    get_model(args.model)
 
     if args.file:
-        result = detect_language(args.file, model)
+        result = detect_language(args.file, args.model)
         print(json.dumps(result, ensure_ascii=False))
     elif args.folder:
-        result = process_folder(args.folder, model)
+        result = process_folder(args.folder, args.model)
         print(json.dumps(result, ensure_ascii=False))
     else:
         parser.error("You must specify either --file or --folder")
@@ -126,4 +142,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
