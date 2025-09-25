@@ -10,7 +10,7 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 
 ---
 
-## ✨ Key Features  
+## Key Features  
 
 - **Automatic Language Detection** – Uses Whisper’s `detect_language()` function.  
 - **Model Selection** – Supports `tiny`, `base`, `small`, `medium`, `large`.  
@@ -20,7 +20,7 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 
 ---
 
-## 📦 Requirements  
+## Requirements  
 
 - **Python**: 3.9+  
 
@@ -36,7 +36,7 @@ sudo apt update && sudo apt install ffmpeg
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ### Single file detection:
 ```bash
@@ -110,7 +110,7 @@ python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/ --model med
 
 ---
 
-## 📚 Use Cases  
+## Use Cases  
 
 - **Multilingual Media Processing** – Detect language before transcription/translation.  
 - **Dataset Preprocessing** – Label large datasets with language info.  
@@ -118,7 +118,7 @@ python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/ --model med
 
 ---
 
-## 📜 License  
+## License  
 
 This project is licensed under **MIT License** – see [LICENSE](LICENSE).  
 
