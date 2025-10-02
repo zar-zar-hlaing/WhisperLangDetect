@@ -19,6 +19,112 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 - **Batch Folder Processing** – Process multiple files at once with structured JSON output.  
 
 ---
+## Supported Languages
+
+| No. | Code | Language           |
+|-----|------|--------------------|
+| 1   | af   | Afrikaans          |
+| 2   | am   | Amharic            |
+| 3   | ar   | Arabic             |
+| 4   | as   | Assamese           |
+| 5   | az   | Azerbaijani        |
+| 6   | ba   | Bashkir            |
+| 7   | be   | Belarusian         |
+| 8   | bg   | Bulgarian          |
+| 9   | bn   | Bengali            |
+| 10  | bo   | Tibetan            |
+| 11  | br   | Breton             |
+| 12  | bs   | Bosnian            |
+| 13  | ca   | Catalan            |
+| 14  | cs   | Czech              |
+| 15  | cy   | Welsh              |
+| 16  | da   | Danish             |
+| 17  | de   | German             |
+| 18  | el   | Greek              |
+| 19  | en   | English            |
+| 20  | es   | Spanish            |
+| 21  | et   | Estonian           |
+| 22  | eu   | Basque             |
+| 23  | fa   | Persian            |
+| 24  | fi   | Finnish            |
+| 25  | fo   | Faroese            |
+| 26  | fr   | French             |
+| 27  | gl   | Galician           |
+| 28  | gu   | Gujarati           |
+| 29  | ha   | Hausa              |
+| 30  | haw  | Hawaiian           |
+| 31  | he   | Hebrew             |
+| 32  | hi   | Hindi              |
+| 33  | hr   | Croatian           |
+| 34  | ht   | Haitian Creole     |
+| 35  | hu   | Hungarian          |
+| 36  | hy   | Armenian           |
+| 37  | id   | Indonesian         |
+| 38  | is   | Icelandic          |
+| 39  | it   | Italian            |
+| 40  | ja   | Japanese           |
+| 41  | jw   | Javanese           |
+| 42  | ka   | Georgian           |
+| 43  | kk   | Kazakh             |
+| 44  | km   | Khmer              |
+| 45  | kn   | Kannada            |
+| 46  | ko   | Korean             |
+| 47  | la   | Latin              |
+| 48  | lb   | Luxembourgish      |
+| 49  | ln   | Lingala            |
+| 50  | lo   | Lao                |
+| 51  | lt   | Lithuanian         |
+| 52  | lv   | Latvian            |
+| 53  | mg   | Malagasy           |
+| 54  | mi   | Maori              |
+| 55  | mk   | Macedonian         |
+| 56  | ml   | Malayalam          |
+| 57  | mn   | Mongolian          |
+| 58  | mr   | Marathi            |
+| 59  | ms   | Malay              |
+| 60  | mt   | Maltese            |
+| 61  | my   | Myanmar            |
+| 62  | ne   | Nepali             |
+| 63  | nl   | Dutch              |
+| 64  | nn   | Norwegian Nynorsk  |
+| 65  | no   | Norwegian          |
+| 66  | oc   | Occitan            |
+| 67  | pa   | Punjabi            |
+| 68  | pl   | Polish             |
+| 69  | ps   | Pashto             |
+| 70  | pt   | Portuguese         |
+| 71  | ro   | Romanian           |
+| 72  | ru   | Russian            |
+| 73  | sa   | Sanskrit           |
+| 74  | sd   | Sindhi             |
+| 75  | si   | Sinhala            |
+| 76  | sk   | Slovak             |
+| 77  | sl   | Slovenian          |
+| 78  | sn   | Shona              |
+| 79  | so   | Somali             |
+| 80  | sq   | Albanian           |
+| 81  | sr   | Serbian            |
+| 82  | su   | Sundanese          |
+| 83  | sv   | Swedish            |
+| 84  | sw   | Swahili            |
+| 85  | ta   | Tamil              |
+| 86  | te   | Telugu             |
+| 87  | tg   | Tajik              |
+| 88  | th   | Thai               |
+| 89  | tk   | Turkmen            |
+| 90  | tl   | Tagalog            |
+| 91  | tr   | Turkish            |
+| 92  | tt   | Tatar              |
+| 93  | uk   | Ukrainian          |
+| 94  | ur   | Urdu               |
+| 95  | uz   | Uzbek              |
+| 96  | vi   | Vietnamese         |
+| 97  | yi   | Yiddish            |
+| 98  | yo   | Yoruba             |
+| 99  | zh   | Chinese            |
+| 100 | yue  | Cantonese          |
+
+---
 
 ## Requirements  
 
@@ -115,6 +221,14 @@ python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/ --model med
 - **Multilingual Media Processing** – Detect language before transcription/translation.  
 - **Dataset Preprocessing** – Label large datasets with language info.  
 - **Content Compliance** – Verify uploaded media matches supported languages.  
+
+---
+
+## References
+
+- [OpenAI Whisper GitHub Repository](https://github.com/openai/whisper)  
+- [Whisper: Robust Speech Recognition via Large-Scale Weak Supervision (arXiv, 2022)](https://arxiv.org/pdf/2212.04356)  
+- [Whisper API Documentation – Supported Languages](https://whisper-api.com/docs/languages/#_top)  
 
 ---
 
