@@ -21,6 +21,9 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 ---
 ## Supported Languages
 
+<details>
+<summary>Click to expand/collapse the full table</summary>
+
 | No. | Code | Language           |
 |-----|------|--------------------|
 | 1   | af   | Afrikaans          |
@@ -123,6 +126,9 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 | 98  | yo   | Yoruba             |
 | 99  | zh   | Chinese            |
 | 100 | yue  | Cantonese          |
+
+
+</details>
 
 ---
 
