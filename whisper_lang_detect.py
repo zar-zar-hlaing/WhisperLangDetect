@@ -3,6 +3,7 @@ import whisper
 import json
 import os
 from pydub import AudioSegment
+from pydub.utils import make_chunks
 from moviepy.editor import VideoFileClip
 import numpy as np
 
@@ -24,43 +25,45 @@ def get_model(model_name="base"):
     return _model
 
 
-def is_silent(content_path, threshold=-50):
-    """Check if audio/video file is silent or has no speech."""
-    ext = content_path.split(".")[-1].lower()
+def is_silent(filepath, silence_threshold=-50.0, chunk_ms=1000):
+    """Return True if no meaningful audio exists."""
     try:
-        if ext in SUPPORTED_AUDIO:
-            sound = AudioSegment.from_file(content_path)
-            if sound is None:
-                return True
-            samples = np.array(sound.get_array_of_samples())
-        elif ext in SUPPORTED_VIDEO:
-            clip = VideoFileClip(content_path)
-            if clip.audio is None:
-                return True
-            # Convert audio to mono and fixed sample rate
-            samples = clip.audio.to_soundarray(fps=16000)
-            if samples.size == 0:
-                return True
-            if len(samples.shape) == 2:  # stereo → mono
-                samples = samples.mean(axis=1)
-        else:
-            return True  # unsupported extension treated as silent
-
-        rms = np.sqrt(np.mean(np.square(samples)))
-        db = 20 * np.log10(rms) if rms > 0 else -100
-        return db < threshold
+        audio = AudioSegment.from_file(filepath)
     except Exception as e:
-        print(f"Error checking silence in {content_path}: {e}")
+        print(f"Error loading audio for silence check: {e}")
+        return True  # treat as silence
+
+    # No audio frames
+    if len(audio) == 0:
         return True
 
+    # Process in chunks and check max dBFS
+    chunks = make_chunks(audio, chunk_ms)
+
+    # Ensure chunks is a list
+    if not isinstance(chunks, (list, tuple)):
+        return True
+
+    # If no valid chunks => silence
+    if len(chunks) == 0:
+        return True
+
+    # Check each chunk
+    for ck in chunks:
+        if ck.dBFS > silence_threshold:
+            return False
+
+    return True
 
 def detect_language(content_path, model_name="base"):
     """Detect language in a single file and return JSON-compatible result."""
-    model = get_model(model_name)  # ensure model is loaded
+    
+    model = get_model(model_name)
 
     file_path, file_name = os.path.split(content_path)
     ext = file_name.split(".")[-1].lower()
 
+    # Unsupported file type
     if ext not in SUPPORTED_AUDIO + SUPPORTED_VIDEO:
         return {
             "status": "1",
@@ -69,6 +72,7 @@ def detect_language(content_path, model_name="base"):
             "result": {"filename": file_name, "langcode": "", "probability": "null"}
         }
 
+    # Silence detection
     if is_silent(content_path):
         return {
             "status": "1",
@@ -76,33 +80,35 @@ def detect_language(content_path, model_name="base"):
             "result": {"filename": file_name, "langcode": "", "probability": "null"}
         }
 
-    # Convert video/audio to a temporary WAV file
     temp_path = None
     try:
+        # Convert to mono 16 kHz WAV for Whisper
         tmp_name, _ = os.path.splitext(file_name)
         temp_path = os.path.join(file_path, tmp_name + ".wav")
-        AudioSegment.from_file(content_path).set_channels(1).set_frame_rate(16000).export(temp_path, format="wav")
-        audio_path = temp_path
 
-        audio = whisper.load_audio(audio_path)
+        AudioSegment.from_file(content_path).set_channels(1).set_frame_rate(16000)\
+            .export(temp_path, format="wav")
+
+        # Load audio for Whisper
+        audio = whisper.load_audio(temp_path)
         audio = whisper.pad_or_trim(audio)
         mel = whisper.log_mel_spectrogram(audio).to(model.device)
+
+        # Detect language
         _, probs = model.detect_language(mel)
         lang = max(probs, key=probs.get)
-        prob = probs[lang]
+        prob = float(probs[lang])
 
-        result = {
+        return {
             "status": "0",
             "errormessage": "",
-            "result": {"filename": file_name, "langcode": lang, "probability": float(prob)}
+            "result": {"filename": file_name, "langcode": lang, "probability": prob}
         }
+
     finally:
+        # Cleanup temporary file
         if temp_path and os.path.exists(temp_path):
             os.remove(temp_path)
-
-    return result
-
-
 
 def process_folder(folder_path, model_name="base"):
     """Process all supported files in a folder."""
