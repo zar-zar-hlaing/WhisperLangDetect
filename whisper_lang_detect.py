@@ -37,7 +37,12 @@ def is_silent(content_path, threshold=-50):
             clip = VideoFileClip(content_path)
             if clip.audio is None:
                 return True
-            samples = np.array(clip.audio.to_soundarray())
+            # Convert audio to mono and fixed sample rate
+            samples = clip.audio.to_soundarray(fps=16000)
+            if samples.size == 0:
+                return True
+            if len(samples.shape) == 2:  # stereo → mono
+                samples = samples.mean(axis=1)
         else:
             return True  # unsupported extension treated as silent
 
@@ -71,17 +76,14 @@ def detect_language(content_path, model_name="base"):
             "result": {"filename": file_name, "langcode": "", "probability": "null"}
         }
 
-    # Convert video or non-mp3 to mp3 for Whisper
+    # Convert video/audio to a temporary WAV file
     temp_path = None
-    if ext != "mp3":
-        tmp_name, _ = os.path.splitext(file_name)
-        temp_path = os.path.join(file_path, tmp_name + ".mp3")
-        AudioSegment.from_file(content_path).export(temp_path, format="mp3")
-        audio_path = temp_path
-    else:
-        audio_path = content_path
-
     try:
+        tmp_name, _ = os.path.splitext(file_name)
+        temp_path = os.path.join(file_path, tmp_name + ".wav")
+        AudioSegment.from_file(content_path).set_channels(1).set_frame_rate(16000).export(temp_path, format="wav")
+        audio_path = temp_path
+
         audio = whisper.load_audio(audio_path)
         audio = whisper.pad_or_trim(audio)
         mel = whisper.log_mel_spectrogram(audio).to(model.device)
@@ -99,6 +101,7 @@ def detect_language(content_path, model_name="base"):
             os.remove(temp_path)
 
     return result
+
 
 
 def process_folder(folder_path, model_name="base"):
