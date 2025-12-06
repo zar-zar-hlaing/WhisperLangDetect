@@ -16,7 +16,9 @@ Supports both **single-file** and **batch folder processing**, handles a wide ra
 - **Model Selection** – Supports `tiny`, `base`, `small`, `medium`, `large`.  
 - **Multi-format Support** – Audio: `.mp3, .aac, .aiff, .amr, .flac, .m4a, .ogg, .wav, .wma`; Video: `.avi, .mkv, .mov, .mpeg, .mp4, .webm, .wmv`.  
 - **Silence Detection** – Skips silent files automatically.  
-- **Batch Folder Processing** – Process multiple files at once with structured JSON output.  
+- **Batch Folder Processing** – Process multiple files at once with structured JSON output.
+- **Max Minutes Option** – Analyze only the first N minutes of a file to handle large files efficiently.  
+
 
 ---
 ## Supported Languages
@@ -160,6 +162,11 @@ python3 whisper_lang_detect.py --file /path/to/sample.mp4
 python3 whisper_lang_detect.py --file /path/to/sample.mp4 --model small
 ```
 
+### Single file with max minutes:
+```bash
+python3 whisper_lang_detect.py --file /path/to/sample.mp4 --max_minutes 5
+```
+
 ### Folder detection:
 ```bash
 python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/
@@ -168,6 +175,11 @@ python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/
 ### Folder detection with specific model:
 ```bash
 python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/ --model medium
+```
+
+### Folder detection with max minutes:
+```bash
+python3 whisper_lang_detect.py --folder /path/to/audio_video_folder/ --max_minutes 7
 ```
 
 ---
